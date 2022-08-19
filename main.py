@@ -4,11 +4,12 @@ from traceback import print_exc
 
 def parse_todo(line: str) -> tuple[bool, str]:
     return (bool(int(line[0])), line[1:])
+
 def parse_rest(rest) -> list[tuple[bool, str]]:
     match rest.find("\n"):
         case -1: return [parse_todo(rest)]
-        case _:
-            return [parse_todo(rest[:rest.find("\n")])] + parse_rest(rest[rest.find("\n")+1:])
+        case index:
+            return [parse_todo(rest[:index])] + parse_rest(rest[index+1:])
 
 def generate_todo_marker(completed: bool) -> str:
     match completed:
@@ -43,12 +44,17 @@ def finish_action(content, inp):
     match get_todo_index(content, int(inp)):
         case index: return content[:index] + "1" + content[index+1:]
 
+def clear(content, inp):
+    return content[get_todo_index(content, int(inp)+1):]
+
 def get_action(inp):
     match inp:
         case "add":
             return add_todo
         case "do":
             return finish_action
+        case "clear":
+            return clear
 
 def get_file_content(file, inp):
     return ""
@@ -58,6 +64,7 @@ def get_file_content(file, inp):
 def main():
     os.system("clear")
     while True:
+        os.system("clear")
         content = ""
         try:
             with open("todo.txt", "r") as f:
