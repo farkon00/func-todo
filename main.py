@@ -1,6 +1,4 @@
-from enum import Enum, auto
 import os
-from traceback import print_exc
 
 def parse_todo(line: str) -> tuple[bool, str]:
     return (bool(int(line[0])), line[1:])
@@ -85,7 +83,6 @@ def main():
             except TypeError:
                 print("Command not found")
             except:
-                print_exc() # This is debug
                 f.write(content)
                 exit(0)
 
